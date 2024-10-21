@@ -1,0 +1,207 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "День открытых дверей ИПТИП",
+    "version": "3.2.7",
+    "description": "API для интернет-магазина комиксов"
+  },
+  "servers": [
+    {
+      "url": "https://opendoor.easy4.team/public",
+      "description": "Основной сервер"
+    }
+  ],
+  "paths": {
+    "/comics": {
+      "get": {
+        "summary": "Получить все комиксы",
+        "description": "Показать все комиксы",
+        "responses": {
+          "200": {
+            "description": "Список комиксов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Comic"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Создать новый комикс",
+        "description": "Добавить новый комикс в коллекцию",
+        "requestBody": {
+          "description": "Данные нового комикса",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Комикс успешно создан"
+          },
+          "400": {
+            "description": "Некорректные данные"
+          }
+        }
+      }
+    },
+    "/comics/{id}": {
+      "get": {
+        "summary": "Получить комикс по ID",
+        "description": "Получить один комикс по его ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID комикса для получения"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Информация о комиксе",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comic"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Комикс не найден"
+          }
+        }
+      },
+      "put": {
+        "summary": "Обновить информацию о комиксе",
+        "description": "Полностью обновить комикс по ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID комикса для обновления"
+          }
+        ],
+        "requestBody": {
+          "description": "Обновленные данные комикса",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Комикс успешно обновлен"
+          },
+          "400": {
+            "description": "Некорректные данные"
+          },
+          "404": {
+            "description": "Комикс не найден"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Частично обновить комикс",
+        "description": "Частично обновить комикс по ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID комикса для обновления"
+          }
+        ],
+        "requestBody": {
+          "description": "Частично обновленные данные комикса",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Комикс успешно частично обновлен"
+          },
+          "400": {
+            "description": "Некорректные данные"
+          },
+          "404": {
+            "description": "Комикс не найден"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Удалить комикс",
+        "description": "Удалить комикс по ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID комикса для удаления"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Комикс успешно удален"
+          },
+          "404": {
+            "description": "Комикс не найден"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Comic": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "image_url": { "type": "string" },
+          "name": { "type": "string" },
+          "price": { "type": "number", "format": "float" },
+          "description": { "type": "string" },
+          "author_id": { "type": "integer" },
+          "genre_id": { "type": "integer" },
+          "published_date": { "type": "string", "format": "date" },
+          "stock": { "type": "integer" }
+        }
+      }
+    }
+  }
+}

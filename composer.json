@@ -1,0 +1,23 @@
+{
+    "name": "yourname/rest-api-with-jwt",
+    "description": "A simple REST API using JWT for authentication without a framework",
+    "version": "1.0.0",
+    "require": {
+      "php": ">=7.4"
+    },
+    "autoload": {
+      "psr-4": {
+        "Config\\": "src/Config/",
+        "Controller\\": "src/Controller/",
+        "Model\\": "src/Model/",
+        "Service\\": "src/Service/"
+      }
+    },
+    "require-dev": {
+      "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+      "test": "phpunit --bootstrap vendor/autoload.php tests"
+    }
+  }
+  

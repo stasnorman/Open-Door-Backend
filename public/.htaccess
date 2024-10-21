@@ -1,0 +1,14 @@
+RewriteEngine On
+RewriteBase /public
+
+# Перенаправляем все запросы на index.php, кроме существующих файлов и директорий
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Разрешаем CORS для OPTIONS запросов
+<IfModule mod_headers.c>
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
