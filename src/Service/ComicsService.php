@@ -12,19 +12,96 @@ class ComicsService {
 
     // Получение всех комиксов
     public function getAllComics() {
-        $query = "SELECT * FROM comics";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $query = "
+            SELECT 
+                comics.id, comics.image_url, comics.name, comics.price, comics.description, 
+                comics.published_date, comics.stock,
+                authors.id AS author_id, authors.name AS author_name,
+                genres.id AS genre_id, genres.genre_name AS genre_name
+            FROM 
+                comics
+            JOIN 
+                authors ON comics.author_id = authors.id
+            JOIN 
+                genres ON comics.genre_id = genres.id
+        ";
+        
+        $statement = $this->conn    ->prepare($query);
+        $statement->execute();
+        
+        $comics = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Преобразование в нужную структуру
+        $result = [];
+        foreach ($comics as $comic) {
+            $result[] = [
+                'id' => (int) $comic['id'],
+                'image_url' => $comic['image_url'],
+                'name' => $comic['name'],
+                'price' => (float) $comic['price'],
+                'description' => $comic['description'],
+                'author' => [
+                    'id' => (int) $comic['author_id'],
+                    'name' => $comic['author_name']
+                ],
+                'genre' => [
+                    'id' => (int) $comic['genre_id'],
+                    'name' => $comic['genre_name']
+                ],
+                'published_date' => $comic['published_date'],
+                'stock' => (int) $comic['stock']
+            ];
+        }
+        
+        return $result;
     }
+    
 
     // Получение комикса по ID
     public function getComicById($id) {
-        $query = "SELECT * FROM comics WHERE id = :id";
+        $query = "
+            SELECT 
+                comics.id, comics.image_url, comics.name, comics.price, comics.description, 
+                comics.published_date, comics.stock,
+                authors.id AS author_id, authors.name AS author_name,
+                genres.id AS genre_id, genres.genre_name AS genre_name
+            FROM 
+                comics
+            JOIN 
+                authors ON comics.author_id = authors.id
+            JOIN 
+                genres ON comics.genre_id = genres.id
+            WHERE 
+                comics.id = :id
+        ";
+
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $comic = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($comic) {
+            return [
+                'id' => (int) $comic['id'],
+                'image_url' => $comic['image_url'],
+                'name' => $comic['name'],
+                'price' => (float) $comic['price'],
+                'description' => $comic['description'],
+                'author' => [
+                    'id' => (int) $comic['author_id'],
+                    'name' => $comic['author_name']
+                ],
+                'genre' => [
+                    'id' => (int) $comic['genre_id'],
+                    'name' => $comic['genre_name']
+                ],
+                'published_date' => $comic['published_date'],
+                'stock' => (int) $comic['stock']
+            ];
+        } else {
+            return null;  // Если запись не найдена, можно вернуть null или пустой массив
+        }
     }
 
     // Создание нового комикса
