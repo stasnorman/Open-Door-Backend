@@ -1,60 +1,37 @@
 <?php
 /**
- * Автозагрузчик для классов, использующих стандарт PSR-4
+ * Универсальный автозагрузчик для классов, использующих стандарт PSR-4
  */
 
-// Автозагрузка классов из пространства имен 'Service'
 spl_autoload_register(function ($class) {
-    $prefix = 'Service\\';
-    $base_dir = __DIR__ . '/../src/Service/';
-    $len = strlen($prefix);
-    
-    if (strncmp($prefix, $class, $len) !== 0) {
-        return;
-    }
+    // Массив пространств имен и их соответствующих директорий
+    $namespaces = [
+        'Service\\' => __DIR__ . '/../src/Service/',
+        'Controller\\' => __DIR__ . '/../src/Controller/',
+        'Config\\' => __DIR__ . '/../src/Config/',
+        // Добавляйте другие пространства имен по необходимости
+    ];
 
-    $relative_class = substr($class, $len);
-    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
-    
-    if (file_exists($file)) {
-        require $file;
+    // Проход по каждому пространству имен
+    foreach ($namespaces as $prefix => $base_dir) {
+        $len = strlen($prefix);
+        
+        // Проверка, начинается ли имя класса с текущего пространства имен
+        if (strncmp($prefix, $class, $len) !== 0) {
+            continue;
+        }
+
+        // Получение относительного имени класса
+        $relative_class = substr($class, $len);
+
+        // Построение полного пути к файлу
+        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+
+        // Проверка существования файла и его подключение
+        if (file_exists($file)) {
+            require $file;
+            break;
+        }
     }
 });
 
-// Автозагрузка классов из пространства имен 'Controller'
-spl_autoload_register(function ($class) {
-    $prefix = 'Controller\\';
-    $base_dir = __DIR__ . '/../src/Controller/';
-    $len = strlen($prefix);
-
-    if (strncmp($prefix, $class, $len) !== 0) {
-        return;
-    }
-
-    $relative_class = substr($class, $len);
-    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
-    
-    if (file_exists($file)) {
-        require $file;
-    }
-});
-
-// Автозагрузка классов из пространства имен 'Config' (например, для базы данных)
-spl_autoload_register(function ($class) {
-    $prefix = 'Config\\';
-    $base_dir = __DIR__ . '/../src/Config/';
-    $len = strlen($prefix);
-
-    if (strncmp($prefix, $class, $len) !== 0) {
-        return;
-    }
-
-    $relative_class = substr($class, $len);
-    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
-
-    if (file_exists($file)) {
-        require $file;
-    }
-});
-
-// Если у вас есть другие пространства имен, добавляйте их аналогичным образом
