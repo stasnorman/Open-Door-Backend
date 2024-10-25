@@ -117,4 +117,4 @@ curl -X GET https://opendoor.easy4.team/public/comics   -H "Authorization: Beare
 
 ## Лицензия
 
-Проект распространяется под лицензией MIT. Подробности можно найти в файле [LICENSE](./LICENSE).
+Проект распространяется под лицензией MIT.
